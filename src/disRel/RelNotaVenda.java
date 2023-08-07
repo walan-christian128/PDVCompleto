@@ -1,5 +1,6 @@
 package disRel;
 
+import disConexao.ConnectionFactory;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -19,12 +20,10 @@ import net.sf.jasperreports.view.JasperViewer;
 
 public class RelNotaVenda {
 
-    private static final String url = "jdbc:mysql://localhost/distribuidora";
-    private static final String driver = "com.mysql.jdbc.Driver";
-    private static final String login = "walan";
-    private static final String pwd = "359483wa@";
+    private Connection con;
 
     public RelNotaVenda() {
+         this.con = new ConnectionFactory().getConnection();
     }
 
     public void gerar(String layout, int vendaID) throws JRException, SQLException, ClassNotFoundException {
@@ -35,11 +34,10 @@ public class RelNotaVenda {
         JasperReport relatorio = JasperCompileManager.compileReport(desenho);
 
 //estabelece conexão
-        Class.forName(driver);
-        Connection con = DriverManager.getConnection(url, login, pwd);
+       
         Statement stm = con.createStatement();
 
-        String query = " select tb_vendas.id codigo,tb_clientes.nome "
+        String sql = " select tb_vendas.id codigo,tb_clientes.nome "
                 + " AS Nome,tb_clientes.celular "
                 + " AS Celular,tb_clientes.endereco "
                 + " AS Endereço,tb_clientes.numero "
@@ -58,7 +56,7 @@ public class RelNotaVenda {
                 + " ON tb_vendas.cliente_id = tb_clientes.id "
                 + " where tb_vendas.id = '" + vendaID + "' ";
 
-        ResultSet rs = stm.executeQuery(query);
+        ResultSet rs = stm.executeQuery(sql);
 
 //implementação da interface JRDataSource para DataSource ResultSet
         JRResultSetDataSource jrRS = new JRResultSetDataSource(rs);

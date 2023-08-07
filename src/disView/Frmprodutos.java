@@ -676,10 +676,7 @@ public class Frmprodutos extends javax.swing.JFrame {
         FornecedoresDAO dao = new FornecedoresDAO();
         List<Fornecedores> listadefornecedores = dao.listaFornecedores();
 
-        jcbfornecedor.removeAll();
-        for (Fornecedores f : listadefornecedores) {
-            jcbfornecedor.addItem(f);
-        }
+       
     }//GEN-LAST:event_jcbfornecedorAncestorAdded
 
     private void jcbfornecedorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jcbfornecedorMouseClicked

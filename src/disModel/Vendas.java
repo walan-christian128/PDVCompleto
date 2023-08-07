@@ -1,7 +1,5 @@
 package disModel;
 
-import disCliente.Clientes;
-
 public class Vendas {
 
     //atributos//

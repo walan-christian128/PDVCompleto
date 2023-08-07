@@ -5,7 +5,8 @@
  */
 package disDAO;
 
-import disCliente.Clientes;
+import com.lowagie.text.pdf.codec.wmf.MetaPen;
+import disModel.Clientes;
 import disConexao.ConnectionFactory;
 
 import disModel.Vendas;
@@ -16,17 +17,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.List;
 import javax.swing.JOptionPane;
-import net.sf.jasperreports.engine.JRResultSetDataSource;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.swing.JRViewer;
-import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -134,6 +127,33 @@ public class VendasDAO {
 
     }
 
+    public double totalPorPeriodo(LocalDate data_inicio, LocalDate data_fim) {
+        try {
+            double totalPeriodo = 0;
+
+            String sql = "select sum(total_venda)as total_periodo,date_format(data_venda,'%d/%m/%Y')"
+                    + " as data_formatada from tb_vendas where data_venda BETWEEN? AND? ";
+            
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, data_inicio.toString());
+            stmt.setString(2, data_fim.toString());
+            
+            ResultSet rs = stmt.executeQuery();
+            
+            if(rs.next()){
+            
+            totalPeriodo = rs.getDouble("total_periodo");
+            
+            
+            }
+            return totalPeriodo;
+            
+        } catch (Exception e) {
+        }
+        return 0;
+
+    }
+
     //Metodo que calcula total da vendaa por data//
     public double retornaTotalVendaPorData(LocalDate data_venda) {
         try {
@@ -158,52 +178,7 @@ public class VendasDAO {
 
     }
 
-    public int notaVenda() {
-        try {
-            
-            int venda_id = 0;
-            String sql = "select tb_clientes.nome"
-                    + "AS Nome,tb_clientes.celular"
-                    + "AS Celular,tb_clientes.endereco"
-                    + "AS Endereço,tb_clientes.numero"
-                    + "AS Numero, tb_clientes.bairro"
-                    + "AS Bairro, tb_clientes.cidade"
-                    + "AS Cidade ,tb_itensvendas.subtotal"
-                    + "AS SubTatotal, tb_produtos.descricao"
-                    + "AS Descrição"
-                    + "from  tb_produtos"
-                    + "INNER JOIN tb_itensvendas"
-                    + "ON tb_produtos.id = tb_itensvendas.produto_id"
-                    + "INNER JOIN tb_vendas"
-                    + "ON tb_itensvendas.venda_id = tb_vendas.id "
-                    + "INNER JOIN tb_clientes "
-                    + "ON tb_vendas.cliente_id = tb_clientes.id"
-                    + "where tb_vendas.id = '" + venda_id + "'";
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.execute();
-            ResultSet rs = stmt.executeQuery();
 
-            if (rs.next()) {
-                Vendas p = new Vendas();
-                p.setId(rs.getInt("id"));
-
-                venda_id = p.getId();
-
-            }
-            
-            JRResultSetDataSource jrRS = new JRResultSetDataSource(rs);
-            JasperReport cr = JasperCompileManager.compileReport("Relatorios2/LojaTeree.jrxml");
-            JasperPrint jp = JasperFillManager.fillReport(cr, new HashMap(), jrRS);
-            JasperViewer.viewReport(jp, false);
-   
-            return venda_id;
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "NOTA NÃO EMITIDA");
-        }
-        return 0;
-       
-          
-
-    }
+    
 
 }

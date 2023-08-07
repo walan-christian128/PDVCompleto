@@ -47,6 +47,8 @@ public class FrmHistorico extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         txtdatafim = new javax.swing.JFormattedTextField();
         pesquisar8 = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
+        txttotal_periodo = new javax.swing.JFormattedTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabelahistorico = new javax.swing.JTable();
 
@@ -122,21 +124,43 @@ public class FrmHistorico extends javax.swing.JFrame {
             }
         });
 
+        jLabel9.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel9.setText("Total do periodo:");
+
+        txttotal_periodo.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,###,00"))));
+        txttotal_periodo.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        txttotal_periodo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txttotal_periodoActionPerformed(evt);
+            }
+        });
+        txttotal_periodo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txttotal_periodoKeyPressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabel7)
-                .addGap(35, 35, 35)
-                .addComponent(txtdatainicio, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(104, 104, 104)
-                .addComponent(jLabel8)
-                .addGap(35, 35, 35)
-                .addComponent(txtdatafim, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(49, 49, 49)
-                .addComponent(pesquisar8)
-                .addGap(0, 157, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel9))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(txtdatainicio, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(104, 104, 104)
+                        .addComponent(jLabel8)
+                        .addGap(35, 35, 35)
+                        .addComponent(txtdatafim, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(49, 49, 49)
+                        .addComponent(pesquisar8))
+                    .addComponent(txttotal_periodo, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 145, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -150,7 +174,11 @@ public class FrmHistorico extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel7)
                         .addComponent(txtdatainicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(92, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(txttotal_periodo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(61, Short.MAX_VALUE))
         );
 
         tabelahistorico.setModel(new javax.swing.table.DefaultTableModel(
@@ -184,7 +212,7 @@ public class FrmHistorico extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 15, Short.MAX_VALUE))
+                .addGap(0, 5, Short.MAX_VALUE))
         );
 
         pack();
@@ -207,9 +235,12 @@ public class FrmHistorico extends javax.swing.JFrame {
             DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             LocalDate data_inicio = LocalDate.parse(txtdatainicio.getText(), formato);
             LocalDate data_fim = LocalDate.parse(txtdatafim.getText(), formato);
+            double totalPeriodo;
 
             VendasDAO dao = new VendasDAO();
             List<Vendas> lista = dao.listarVendasPorPeriodo(data_inicio, data_fim);
+            totalPeriodo = dao.totalPorPeriodo(data_inicio, data_fim);
+            txttotal_periodo.setText(String.valueOf(totalPeriodo));
             DefaultTableModel dados = (DefaultTableModel) tabelahistorico.getModel();
             dados.setNumRows(0);
 
@@ -241,7 +272,7 @@ public class FrmHistorico extends javax.swing.JFrame {
 
         int venda_id = Integer.parseInt(tabelahistorico.getValueAt(tabelahistorico.getSelectedRow(), 0).toString());
 
-        // dados dos ites comprados //
+        // dados dos itens comprados //
         ItemVendas item = new ItemVendas();
         ItemVendaDAO dao_item = new ItemVendaDAO();
 
@@ -273,6 +304,14 @@ public class FrmHistorico extends javax.swing.JFrame {
         txtdatainicio.setText(dataformatada);
         txtdatafim.setText(dataformatada);
     }//GEN-LAST:event_formWindowActivated
+
+    private void txttotal_periodoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txttotal_periodoKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txttotal_periodoKeyPressed
+
+    private void txttotal_periodoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txttotal_periodoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txttotal_periodoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -314,6 +353,7 @@ public class FrmHistorico extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
@@ -321,5 +361,6 @@ public class FrmHistorico extends javax.swing.JFrame {
     private javax.swing.JTable tabelahistorico;
     private javax.swing.JFormattedTextField txtdatafim;
     private javax.swing.JFormattedTextField txtdatainicio;
+    private javax.swing.JFormattedTextField txttotal_periodo;
     // End of variables declaration//GEN-END:variables
 }

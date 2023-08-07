@@ -6,7 +6,7 @@
 package disView;
 
 import com.sun.glass.events.KeyEvent;
-import disCliente.Clientes;
+import disModel.Clientes;
 import disDAO.ClientesDAO;
 import disDAO.ProdutosDAO;
 import disModel.Produtos;
@@ -259,6 +259,11 @@ public class Frmvendas extends javax.swing.JFrame {
         jLabel6.setText("CODIGO:");
 
         jTxcodigoP.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jTxcodigoP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTxcodigoPActionPerformed(evt);
+            }
+        });
         jTxcodigoP.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jTxcodigoPKeyPressed(evt);
@@ -745,6 +750,10 @@ public class Frmvendas extends javax.swing.JFrame {
     private void btndescontoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btndescontoKeyPressed
         // TODO add your handling code here:
     }//GEN-LAST:event_btndescontoKeyPressed
+
+    private void jTxcodigoPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTxcodigoPActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTxcodigoPActionPerformed
     private void txtcepkeyPressed(java.awt.event.KeyEvent evt) {
 
     }

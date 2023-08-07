@@ -5,7 +5,7 @@
  */
 package disView;
 
-import disCliente.Clientes;
+import disModel.Clientes;
 import disDAO.ClientesDAO;
 import disModel.Utilitarios;
 import java.util.List;

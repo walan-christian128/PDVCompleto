@@ -34,7 +34,7 @@ public class FuncionariosDAO {
 
     ///Metodo Cadastrar//
     public void cadastrarFuncionarios(Funcionarios obj) {
-        //comendo SQL//
+        //comando SQL//
         try {
             String sql = "INSERT INTO tb_funcionarios(nome,rg,cpf,email,senha,cargo,nivel_acesso,telefone,celular,cep,endereco,numero,complemento,bairro,cidade,estado)"
                     + "                    VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";

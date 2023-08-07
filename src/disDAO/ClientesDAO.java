@@ -5,7 +5,7 @@
  */
 package disDAO;
 
-import disCliente.Clientes;
+import disModel.Clientes;
 import disConexao.ConnectionFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

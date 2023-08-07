@@ -5,7 +5,7 @@
  */
 package disView;
 
-import disCliente.Clientes;
+import disModel.Clientes;
 import disDAO.ClientesDAO;
 import disDAO.FuncionariosDAO;
 import disModel.Funcionarios;

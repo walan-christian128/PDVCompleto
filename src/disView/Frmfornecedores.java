@@ -7,11 +7,18 @@ package disView;
 
 
 
+import com.sun.glass.events.KeyEvent;
 import disDAO.FornecedoresDAO;
 import disModel.Fornecedores;
 import disModel.Utilitarios;
+import java.net.URL;
+import java.util.Iterator;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.dom4j.Document;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
 
 /**
  *
@@ -192,6 +199,11 @@ public class Frmfornecedores extends javax.swing.JFrame {
             ex.printStackTrace();
         }
         jtxCEP.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jtxCEP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtxCEPActionPerformed(evt);
+            }
+        });
         jtxCEP.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jtxCEPKeyPressed(evt);
@@ -346,8 +358,8 @@ public class Frmfornecedores extends javax.swing.JFrame {
                         .addGroup(jPdadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jcbuf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPdadosLayout.createSequentialGroup()
-                                .addComponent(jtxbairro, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(40, 40, 40)
+                                .addComponent(jtxbairro, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel12)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jtxcidade, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -355,7 +367,7 @@ public class Frmfornecedores extends javax.swing.JFrame {
                                 .addComponent(jLabel13)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jtxcomplemento, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(232, Short.MAX_VALUE))
             .addGroup(jPdadosLayout.createSequentialGroup()
                 .addGap(263, 263, 263)
                 .addComponent(jBNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -769,7 +781,59 @@ public class Frmfornecedores extends javax.swing.JFrame {
     }//GEN-LAST:event_pesquisar2ActionPerformed
 
     private void jtxCEPKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtxCEPKeyPressed
-        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            
+	
+		String logradouro = "";
+		String tipoLogradouro = "";
+		String resultado = null;
+		String cep = jtxCEP.getText();
+		try {
+			URL url = new URL("http://cep.republicavirtual.com.br/web_cep.php?cep=" + cep + "&formato=xml");
+			SAXReader xml = new SAXReader();
+			 Document documento = xml.read(url);
+			Element root = documento.getRootElement();
+			for (Iterator<Element> it = root.elementIterator(); it.hasNext();) {
+				Element element = it.next();
+				if (element.getQualifiedName().equals("cidade")) {
+					jtxcidade.setText(element.getText());
+                                }
+					if (element.getQualifiedName().equals("bairro")) {
+						jtxbairro.setText(element.getText());
+					}
+					if (element.getQualifiedName().equals("uf")) {
+						jcbuf.setSelectedItem(element.getText());
+					}
+                                        if (element.getQualifiedName().equals("tipo_logradouro")) {
+						tipoLogradouro = element.getText();
+					}
+                                        if (element.getQualifiedName().equals("logradouro")) {
+						logradouro = element.getText();
+                                        }
+                                        if (element.getQualifiedName().equals("resultado")) {
+						resultado = element.getText();
+                                                if(resultado.equals("1")){
+                                                
+                                                }else{
+                                                    JOptionPane.showMessageDialog(null, "CEP NÃO ENCONTRADO");
+                                           
+                                                }
+                                                
+                                        }
+                                        
+
+			}
+                        jtxendereco.setText(tipoLogradouro+" "+logradouro);
+			
+			
+			
+		} catch (Exception e) {
+			System.out.print(e);
+		}
+
+        }
+        
+
     }//GEN-LAST:event_jtxCEPKeyPressed
 
     private void jBNovo1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBNovo1ActionPerformed
@@ -787,6 +851,10 @@ public class Frmfornecedores extends javax.swing.JFrame {
     private void jBExcluir2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBExcluir2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jBExcluir2ActionPerformed
+
+    private void jtxCEPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtxCEPActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtxCEPActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

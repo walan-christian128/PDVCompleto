@@ -1,7 +1,7 @@
 
 package disView;
 
-import disCliente.Clientes;
+import disModel.Clientes;
 import disDAO.ItemVendaDAO;
 import disDAO.ProdutosDAO;
 import disDAO.VendasDAO;
@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import net.sf.jasperreports.engine.JRException;
 
 
 /**
@@ -381,15 +382,15 @@ public class frmpagamentos extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "VENDA REGISTREADA COM SUCESSO!");
              
          }
-      ///try {
-            ///new RelNotaVenda().gerar("src/Relatorios2/LojaTeree_2.jrxml",objv.getId());
-       /// } catch (JRException ex) {
-          //  Logger.getLogger(frmpagamentos.class.getName()).log(Level.SEVERE, null, ex);
-        ///} catch (SQLException ex) {
-           // Logger.getLogger(frmpagamentos.class.getName()).log(Level.SEVERE, null, ex);
-        //} catch (ClassNotFoundException ex) {
-          //  Logger.getLogger(frmpagamentos.class.getName()).log(Level.SEVERE, null, ex);
-       // }
+     try {
+            new RelNotaVenda().gerar("src/Relatorios2/LojaTeree_2.jrxml",objv.getId());
+       } catch (JRException ex) {
+           Logger.getLogger(frmpagamentos.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+           Logger.getLogger(frmpagamentos.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(frmpagamentos.class.getName()).log(Level.SEVERE, null, ex);
+       }
                  new Utilitarios().limparTela(jPanel1);
                  this.dispose();
        

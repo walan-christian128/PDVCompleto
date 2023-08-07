@@ -5,8 +5,6 @@
  */
 package disModel;
 
-import disCliente.Clientes;
-
 /**
  *
  * @author Walan
